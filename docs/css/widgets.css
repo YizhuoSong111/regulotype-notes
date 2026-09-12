@@ -1,0 +1,53 @@
+/* Figure 7 palette, lettering, and animation primitives from the supplied preview. */
+@font-face {
+  font-family:'Excalifont'; src:url('../fonts/Excalifont-Regular.woff2') format('woff2');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+:root {
+  --n-teacher:#2F7C87; --n-student:#6E4FA2; --n-data:#A8811A;
+  --n-kept:#5C8A55; --n-loss:#B0537F; --n-pruned:#A8613C;
+  --n-dim:#6A6076; --n-edge:#DCD3EC; --n-panel:#FCFBFE;
+  --n-panel-2:#F6F3FB; --n-ink:#2B2536;
+}
+.article .nfig, .article .nfig text { font-family:'Excalifont','Chalkboard SE','Comic Sans MS',cursive; }
+.article .nfig { position:relative; margin:0; padding:28px 16px 6px; border:1px solid var(--n-edge); border-radius:14px; background:var(--n-panel); }
+.figure-scroll { overflow-x:auto; }
+.figure-scroll > svg { display:block; width:100%; min-width:720px; height:auto; }
+.article .replay {
+  position:absolute; top:8px; right:10px; z-index:2; display:none;
+  align-items:center; gap:5px; padding:5px 10px; min-height:32px;
+  font-family:var(--body-font); font-size:14px;
+  color:var(--n-dim); background:var(--n-panel-2);
+  border:1px solid var(--n-edge); border-radius:999px; cursor:pointer;
+}
+.article .nfig.is-animated .replay { display:inline-flex; }
+.article .replay:hover { color:var(--n-student); border-color:var(--n-student); }
+.article .replay:focus-visible { outline:2px solid var(--n-student); outline-offset:3px; }
+.article .replay svg { width:11px; height:11px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
+.article .nfig .lbl { fill:var(--n-ink); font-size:15px; }
+.article .nfig .lbl.sm { font-size:14px; fill:var(--n-dim); }
+.article .nfig .lbl.bg { font-size:18px; }
+.article .nfig .mid { text-anchor:middle; }
+.article .nfig .end { text-anchor:end; }
+/* With no JavaScript, the complete drawing remains visible. */
+.article .nfig.is-animated .a-draw { stroke-dasharray:var(--len,400); stroke-dashoffset:var(--len,400); animation:w-draw var(--dur,0.9s) ease forwards var(--d,0s); }
+.article .nfig.is-animated .a-rise { opacity:0; animation:w-rise var(--dur,0.55s) ease forwards var(--d,0s); }
+.article .nfig.is-animated .a-pop { opacity:0; transform:scale(0.6); transform-box:fill-box; transform-origin:center; animation:w-pop var(--dur,0.5s) cubic-bezier(0.2,1.5,0.4,1) forwards var(--d,0s); }
+.article .nfig [class*='a-'] { animation-play-state:paused !important; }
+.article .nfig.is-playing [class*='a-'] { animation-play-state:running !important; }
+@keyframes w-draw { to { stroke-dashoffset:0; } }
+@keyframes w-rise { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes w-pop { to { opacity:1; transform:scale(1); } }
+@media (prefers-reduced-motion:reduce) {
+  .article .nfig [class*='a-'] { animation:none !important; opacity:1 !important; transform:none !important; stroke-dashoffset:0 !important; }
+}
+@media (max-width:600px) {
+  .article .nfig { padding:36px 8px 6px; }
+  .figure-scroll::before { content:'Scroll horizontally to explore the figure'; display:block; font-family:var(--body-font); font-size:14px; color:var(--n-dim); padding:4px 0 8px; }
+}
+@media print {
+  .article .nfig .replay, .figure-scroll::before { display:none !important; }
+  .figure-scroll { overflow:visible; }
+  .figure-scroll > svg { min-width:0; }
+  .article .nfig [class*='a-'] { animation:none !important; opacity:1 !important; transform:none !important; stroke-dashoffset:0 !important; }
+}

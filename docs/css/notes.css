@@ -1,0 +1,51 @@
+.note-page { max-width: 1160px; margin: 3.5rem auto 0; padding: 0 2rem; }
+.note-header, .note-contents { max-width: 760px; margin-right: auto; margin-left: auto; }
+.note-header h1 { margin: 0 0 2rem; }
+.note-contents { padding: 1.25rem 0; margin-bottom: 3rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.note-contents h2 { margin: 0 0 .65rem; font-size: .875rem; color: var(--muted); font-weight: 600; }
+.toc ul { margin: 0; padding-left: 1.15rem; columns: 2; column-gap: 2rem; font-size: .9375rem; }
+.toc li { break-inside: avoid; padding: .12rem 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.article > :is(p, h2, h3, h4, ul, ol, blockquote, pre) { max-width: 760px; margin-left: auto; margin-right: auto; }
+.article > h2 { margin-top: 3.25rem; margin-bottom: 1.15rem; }
+.article > h3 { margin-top: 2rem; margin-bottom: .9rem; }
+.article > h2:first-child { margin-top: 0; }
+.article p { margin-top: 0; margin-bottom: 1.3rem; }
+.article blockquote { border-left: 3px solid var(--rule); padding-left: 1.2rem; }
+.article pre { overflow-x: auto; padding: 1rem; background: #f7f6f9; font-size: .9rem; }
+.article code { font-size: .9em; }
+.article img { max-width: 100%; height: auto; }
+.table-scroll { width: 100%; overflow-x: auto; margin: 1.5rem 0 2.5rem; border: 1px solid var(--rule); border-radius: 4px; }
+.table-scroll[data-overflow="true"]::before { content: "Scroll horizontally to read all columns"; display: block; padding: .5rem .8rem; font-size: .875rem; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; min-width: 1050px; table-layout: fixed; font-size: .875rem; line-height: 1.65; }
+th, td { text-align: left; vertical-align: top; padding: 1rem .85rem; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+thead th { background: #f4f1f8; color: #49365e; font-size: .875rem; font-weight: 600; }
+thead th:first-child { width: 13%; }
+thead th:nth-child(2) { width: 22%; }
+thead th:last-child { width: 26%; }
+tbody th { font-weight: 600; }
+tbody tr:last-child > * { border-bottom: 0; }
+tbody tr:nth-child(even) { background: #fcfbfd; }
+math { font-family: "STIX Two Math", "Cambria Math", math; font-size: 1em; }
+td math { max-width: 100%; display: inline-block; overflow-x: auto; vertical-align: middle; padding-bottom: .2em; }
+.research-figure { margin: 1.5rem auto 2rem; max-width: 960px; }
+.research-figure figcaption { font-family: var(--body-font); font-size: .9375rem; line-height: 1.7; color: var(--muted); padding: .85rem .2rem 0; }
+.research-figure figcaption strong { color: var(--accent); }
+.article [id^="ref-"] { font-size: .9375rem; overflow-wrap: anywhere; }
+.article [id^="ref-"]:target { background: #f4f1f8; outline: .5rem solid #f4f1f8; }
+@media (max-width: 650px) {
+  .note-page { margin-top: 2rem; padding: 0 1.25rem; }
+  .toc ul { columns: 1; }
+  .note-contents { margin-bottom: 2rem; }
+}
+@media print {
+  .note-page { max-width: none; margin: 0; padding: 0; }
+  .note-contents { display: none; }
+  .table-scroll { overflow: visible; }
+  .table-scroll::before { display: none !important; }
+  table { min-width: 0; font-size: 7pt; }
+  th, td { padding: .4rem; }
+  tr, .research-figure { break-inside: avoid; }
+  td math { overflow: visible; }
+}
