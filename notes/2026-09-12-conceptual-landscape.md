@@ -1,0 +1,93 @@
+---
+title: Conceptual landscape around regulotypes
+date: 2026-09-12
+summary: Related methods, competing concepts, and the proposed intersection of inherited genetic response and cellular representation.
+---
+
+## Motivation / overview
+
+Regulotypes propose learning and validating a shared cross-locus cis-response profile as a cellular representation. This note places that proposal alongside existing genetic-context models and response-oriented cellular representations.
+
+A cross-locus cell profile is implicit in SURGE’s fitted coefficients. Restating it as R does not create a new mathematical object; its use as a validated cellular representation needs separate evidence. [1](#ref-1)
+
+## Related existing methods
+
+### Table 1. Related existing methods
+
+| Method | Main mathematical object | Used for | Output | Relation to this project |
+| --- | --- | --- | --- | --- |
+| LIVI (2026 preprint) [3](#ref-3) | NB-VAE with cell-state <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>C</mtext></mrow></math>, donor <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>D</mtext></mrow></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>D×C</mtext></mrow></math> latent structure; First find the phenotype <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>X</mtext><mover><mo stretchy="true">→</mo><mrow><mrow><mtext>VAE</mtext></mrow></mrow></mover><msub><mrow><mtext>Z</mtext></mrow><mrow><mtext>D×C</mtext></mrow></msub></mrow></math>, then map genotype <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>G</mtext><mover><mo stretchy="true">→</mo><mrow><mrow><mtext>association test</mtext></mrow></mrow></mover><msub><mrow><mtext>Z</mtext></mrow><mrow><mtext>D</mtext><mtext>×</mtext><mtext>C</mtext></mrow></msub></mrow></math>. | Mapping cell-state-dependent trans genetic effects. | SNP–factor associations; projected cell/gene effects; responsive cells. | Methodological neighbor. Provides cell-resolved genetic-response projections, but <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>C</mtext></mrow></math> is learned first and frozen rather than jointly learned from genetic effects across cis loci. |
+| GASPACHO (2023) [8](#ref-8) | GPLVM for continuous latent cellular state C from expression X, followed by Gaussian-process regression for state-dependent QTL effects. <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>Y ~f</mtext><mrow><mo>(</mo><mrow><mtext>C</mtext></mrow><mo>)</mo></mrow><mtext>+Gβ</mtext><mrow><mo>(</mo><mrow><mtext>C</mtext></mrow><mo>)</mo></mrow><mtext>,  β(C)~GP</mtext></mrow></math> | Mapping nonlinear, dynamic genetic effects across continuous cellular states. | Cellular trajectories and state-dependent genetic-effect functions. | Close conceptual precedent. It learns continuous cellular states and models genetic effects, but state inference and genetic association are performed sequentially. |
+| scooby (2025) [4](#ref-4) | DNA sequence + single-cell state embedding → Predict cell-specific RNA/ATAC profiles | Predicting cell-specific gene regulation and variant effects from sequence. | Reference/alternative sequence prediction differences at cell and gene level. | Adjacent precedent. It already produces cell-specific variant-effect maps, but the effect is a sequence-model prediction difference rather than a donor-based cis-eQTL slope,. |
+| LEMUR<br>(2025) [7](#ref-7) | Condition-dependent latent embedding with multivariate regression.<br><br>Known condition/ covariate effect <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>×</mtext></mrow></math> continuous cell latent state→ cell-specific expression response | Modeling how single-cell expression programs change across experimental or biological conditions. | Cell- and gene-specific condition effects, counterfactual expression predictions, and local DE neighborhoods. | Conceptual neighbor. It learns response-oriented cellular representations and cell-specific condition effects, but the perturbation is a general condition/covariate rather than a cis genotype. |
+| MrVI<br>(2025) [5](#ref-5) | Sample-unaware cell state <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>u</mtext></mrow><mrow><mtext>n</mtext></mrow></msub></mrow></math>+ sample identity <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>s</mtext></mrow></math>→ sample-aware cell state <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mrow><mtext>z</mtext></mrow><mrow><mtext>n</mtext></mrow><mrow><mtext>s</mtext></mrow></msubsup></mrow></math>→ NB cell-specific gene expression. | Modeling sample-level heterogeneity in single-cell data without predefined cell types. | Cell-specific counterfactual states, local sample-distance matrices, sample/covariate effects on gene expression. | Conceptual neighbor. It learns how donor/sample identity changes cellular states at single-cell resolution, but this is a whole-sample effect rather than a specific cis-allele effect. |
+
+## Competing concepts
+
+### Table 2. Competing concepts
+
+| Method | Conceptual territory | Main mathematical object | Biological interpretation | Relation to regulotype |
+| --- | --- | --- | --- | --- |
+| SURGE<br>Strober et al.<br>(2024) [1](#ref-1) | Cellular axes of genetic regulation | Shared latent contexts and locus loadings imply a genetic-effect vector for each cell:<br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>r</mtext></mrow><mrow><mtext>si</mtext></mrow></msub><mtext> = </mtext><msub><mrow><mtext>F</mtext></mrow><mrow><mtext>s</mtext></mrow></msub><mtext> + </mtext><msubsup><mrow><mtext>u</mtext></mrow><mrow><mtext>i</mtext></mrow><mrow><mtext>T</mtext></mrow></msubsup><msub><mrow><mtext>v</mtext></mrow><mrow><mtext>s</mtext></mrow></msub></mrow></math><br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>r</mtext></mrow><mrow><mtext>i</mtext></mrow></msub><mtext> = (</mtext><msub><mrow><mtext>r</mtext></mrow><mrow><mtext>si</mtext></mrow></msub><msub><mrow><mtext>)</mtext></mrow><mrow><mtext>s</mtext></mrow></msub></mrow></math> | Discovers continuous contexts across independent variant–gene pairs and relates them to cell types and disease-associated regulation. | Closest precedent. A cross-locus cell profile is implicit in its fitted coefficients. Restating it as R does not create a new mathematical object; its use as a validated cellular representation needs separate evidence. |
+| CellRegMap<br>Cuomo et al.<br>(2022) [2](#ref-2) | Cell-resolved allelic-effect profiles | A persistent effect plus a cell-specific random effect for each variant–gene pair:<br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>r</mtext></mrow><mrow><mtext>si</mtext></mrow></msub><mtext> = </mtext><msub><mrow><mtext>β</mtext></mrow><mrow><mtext>s</mtext></mrow></msub><mtext> + </mtext><msub><mrow><mtext>b</mtext></mrow><mrow><mtext>si</mtext></mrow></msub></mrow></math><br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>b</mtext></mrow><mrow><mtext>s</mtext></mrow></msub><mtext> ∼ N(0, </mtext><msubsup><mrow><mtext>σ</mtext></mrow><mrow><mtext>s</mtext></mrow><mrow><mtext>2</mtext></mrow></msubsup><msub><mrow><mtext>K</mtext></mrow><mrow><mtext>C</mtext></mrow></msub><mtext>)</mtext></mrow></math> | Estimates allelic effects in individual cells, clusters eQTL effect patterns and selects responsive cell populations. | Estimates allelic responses and selects responsive cells. Stacking separate locus fits yields a cell profile, but the paper does not establish a common cross-locus cell representation. |
+| LIVI<br>Vagiaki et al.<br>(2026 preprint) [3](#ref-3) | Cell-specific genetic response of gene programs | SNP effects on donor factors, projected through cell-state gates to cells and through loadings to genes:<br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>X </mtext><mo>→</mo><mtext> D×C</mtext></mrow></math><br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>G↔D</mtext></mrow></math> | Localizes trans genetic effects to responsive cells and co-regulated gene programs, including effects along continuous immune-cell transitions. | Projects inherited-variant responses onto cells. A common cis-effect profile used to define cell identity would extend its trans-effect localization; cell-specific genetic response itself is already present. |
+| scooby<br>Hingerl et al.<br>(2025) [4](#ref-4) | Cell-specific sensitivity to regulatory sequence variants | Reference/alternative contrasts from a sequence model conditioned on a cell embedding:<br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>f</mtext></mrow><mrow><mtext>g</mtext></mrow></msub><mtext>(</mtext><msub><mrow><mtext>S</mtext></mrow><mrow><mtext>alt</mtext></mrow></msub><mtext>, </mtext><msub><mrow><mtext>z</mtext></mrow><mrow><mtext>i</mtext></mrow></msub><mtext>) versus </mtext><msub><mrow><mtext>f</mtext></mrow><mrow><mtext>g</mtext></mrow></msub><mtext>(</mtext><msub><mrow><mtext>S</mtext></mrow><mrow><mtext>ref</mtext></mrow></msub><mtext>, </mtext><msub><mrow><mtext>z</mtext></mrow><mrow><mtext>i</mtext></mrow></msub><mtext>)</mtext></mrow></math> | Predicts where regulatory variants affect expression or accessibility across cell types and within a single-cell map. | Cell-specific allele responses. Its sequence contrasts differ from donor-estimated cis slopes, but this distinction in estimation does not remove the overlap with a broadly defined genetic-response profile. |
+| MrVI<br>Boyeau et al.<br>(2025) [5](#ref-5) | Cells grouped by shared responses to sample backgrounds | For each cell, counterfactual states under different samples define a sample-distance matrix:<br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>D</mtext></mrow><mrow><mtext>i</mtext></mrow></msub><mtext>(a,b) = ‖</mtext><msubsup><mrow><mtext>z</mtext></mrow><mrow><mtext>i</mtext></mrow><mrow><mtext>(a)</mtext></mrow></msubsup><mtext> - </mtext><msubsup><mrow><mtext>z</mtext></mrow><mrow><mtext>i</mtext></mrow><mrow><mtext>(b)</mtext></mrow></msubsup><mtext>‖</mtext></mrow></math> | Groups cells that imply similar sample relationships, and finds coherent disease- or treatment-associated cellular responses. | Strong precedent for response-defined grouping. Already groups cells by how backgrounds affect them. Its sample-distance profile summarizes whole-sample differences rather than signed effects of specified inherited alleles. |
+| GEDI<br>Madrigal et al.<br>(2024) [6](#ref-6) | Covariate-specific transcriptomic vector fields | Sample covariates shift and deform a shared cell manifold. Their conditional-mean effect at cell state b is:<br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>J</mtext></mrow><mrow><mtext>h</mtext></mrow></msub><mtext>(</mtext><msub><mrow><mtext>b</mtext></mrow><mrow><mtext>i</mtext></mrow></msub><mtext>) = </mtext><msub><mrow><mtext>R</mtext></mrow><mrow><mtext>o</mtext></mrow></msub><mtext> + ∑</mtext><msub><mrow><mtext>b</mtext></mrow><mrow><mtext>ik</mtext></mrow></msub><msub><mrow><mtext>R</mtext></mrow><mrow><mtext>k</mtext></mrow></msub></mrow></math> | Maps the direction and magnitude of disease-associated expression shifts across cells and relates these shifts to regulatory programs. | Potential formal umbrella. Setting h to allele dosage yields cell-dependent genetic slopes in the conditional mean. This is our specialization of its equations; its demonstrated vector fields concern other sample covariates. |
+| LEMUR<br>Ahlmann-Eltze and Huber<br>(2025) [7](#ref-7) | Cell-specific contrasts and coherent response groups | A condition-dependent manifold gives a gene-by-cell contrast matrix:<br><br><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mtext>Δ</mtext></mrow><mrow><mtext>gi</mtext></mrow></msub><mtext> = </mtext><msub><mrow><mtext>μ</mtext></mrow><mrow><mtext>g</mtext></mrow></msub><mtext>(</mtext><msub><mrow><mtext>z</mtext></mrow><mrow><mtext>i</mtext></mrow></msub><mtext>, </mtext><msub><mrow><mtext>h</mtext></mrow><mrow><mtext>1</mtext></mrow></msub><mtext>) - </mtext><msub><mrow><mtext>μ</mtext></mrow><mrow><mtext>g</mtext></mrow></msub><mtext>(</mtext><msub><mrow><mtext>z</mtext></mrow><mrow><mtext>i</mtext></mrow></msub><mtext>, </mtext><msub><mrow><mtext>h</mtext></mrow><mrow><mtext>0</mtext></mrow></msub><mtext>)</mtext></mrow></math> | Predicts expression changes for each cell and gene, then identifies connected neighborhoods with consistent differential expression. | Explicit response-first cell selection. Already selects cells with coherent modeled responses. Its condition contrasts and gene-specific neighborhoods are distinct from a common cell profile over independent cis-allele effects. |
+
+## Conceptual landscape
+
+Two conceptual directions approach the proposed intersection: context-dependent genetic effects and response-defined cellular representations. The directions overlap; proximity is not a performance ranking or evidence of an unoccupied niche. Positions are conceptual rather than quantitative.
+
+### Figure 7. Conceptual territory around regulotypes
+
+<figure class="research-figure" id="figure-7" markdown="1">
+
+<!-- figure:conceptual-landscape -->
+
+<figcaption markdown="1">
+
+**Figure 7.** Conceptual territory around regulotypes. CellRegMap, scDALI and GASPACHO model genetic or allelic variation in cellular context; scooby predicts variant effects conditional on a cell embedding. SURGE and PICALO learn contexts from genetic interactions (PICALO: bulk data), while LIVI projects inherited effects onto cells and programs. From general perturbations, CellCap learns shared response programs, GEDI models covariate-dependent shifts, and MrVI, LEMUR and contrastiveVI expose response-related cellular structure. Regulotypes propose learning and validating a shared cross-locus cis-response profile as a cellular representation. Directions overlap; proximity is not a performance ranking or evidence of an unoccupied niche. Experimental gene perturbations belong to the lower, non-inherited side. Positions are conceptual rather than quantitative.
+
+</figcaption>
+</figure>
+
+## Interpretation of the conceptual axes
+
+### Horizontal axis: response and representation
+
+From left to right, the map moves from “cell state defines response” toward “response defines cellular representation.” CellRegMap, scDALI and GASPACHO sit toward the state-dependent genetic-effect side. SURGE and PICALO approach from learning genetic contexts; PICALO is marked as a bulk-data method.
+
+### Vertical axis: type of perturbation
+
+From bottom to top, the map moves from “general condition / sample perturbation” toward “inherited genetic perturbation.” Experimental gene perturbations belong to the lower, non-inherited side.
+
+### The proposed intersection
+
+Regulotype is placed at the proposed intersection where a shared cross-locus cis-response profile represents a cell. Simply stacking existing effect estimates does not establish a new mathematical object or validate the representation. The arrows describe overlapping conceptual directions, not measured scores or a training sequence.
+
+## References
+
+<p id="ref-1">[1] Strober et al. (2024). SURGE: uncovering context-specific genetic-regulation of gene expression from single-cell RNA sequencing using latent-factor models. Genome Biology 25, 28. Evidence: Table 2: Fig. 1; model definition and latent-context interpretation. <a href="https://doi.org/10.1186/s13059-023-03152-z">Source</a></p>
+
+<p id="ref-2">[2] Cuomo et al. (2022). CellRegMap: a statistical framework for mapping context-specific regulatory variants using scRNA-seq. Molecular Systems Biology 18, e10663. Evidence: Table 2: Fig. 1; Figs. 4–5 and EV4. <a href="https://doi.org/10.15252/msb.202110663">Source</a></p>
+
+<p id="ref-3">[3] Vagiaki et al. (2026 preprint). Mapping trans-eQTLs at single-cell resolution using Latent Interaction Variational Inference. bioRxiv v1, posted 6 February 2026. Evidence: Table 1: Fig. 1 (NB-VAE and interaction); Methods, HTML paragraph p-64 (cell-state factors learned first, then fixed). Table 2: Figs. 3–4; Methods p-68 (single-cell effect projection). <a href="https://www.biorxiv.org/content/10.64898/2026.02.04.703363v1.full">Source</a></p>
+
+<p id="ref-4">[4] Hingerl et al. (2025). scooby: modeling multimodal genomic profiles from DNA sequence at single-cell resolution. Nature Methods 22, 2275–2285. Evidence: Table 1: Fig. 1 (DNA sequence and cell embedding to RNA/ATAC); Figs. 4–5 (alternative/reference allele prediction). Table 2: Fig. 5a,e (cell-specific variant-effect maps). <a href="https://doi.org/10.1038/s41592-025-02854-5">Source</a></p>
+
+<p id="ref-5">[5] Boyeau et al. (2025). Deep generative modeling of sample-level heterogeneity in single-cell genomics. Nature Methods 22, 2264–2274. Evidence: Tables 1–2: Fig. 1 (sample-unaware to sample-aware latent state); Methods on the generative model and local sample distances; Discussion on counterfactual sample representations. <a href="https://doi.org/10.1038/s41592-025-02808-x">Source</a></p>
+
+<p id="ref-6">[6] Madrigal et al. (2024). A unified model for interpretable latent embedding of multi-sample, multi-condition single-cell data. Nature Communications 15, 6573. Evidence: Table 2: Fig. 3; Methods Eqs. 11 and 17–20. <a href="https://doi.org/10.1038/s41467-024-50963-0">Source</a></p>
+
+<p id="ref-7">[7] Ahlmann-Eltze and Huber (2025). Analysis of multi-condition single-cell data with latent embedding multivariate regression. Nature Genetics 57, 659–667. Evidence: Tables 1–2: Fig. 1b–c (condition-dependent latent regression, cell-level contrasts and response neighborhoods); Fig. 2b (per-cell predictions); Methods Eq. 7 (LEMUR model). <a href="https://doi.org/10.1038/s41588-024-01996-0">Source</a></p>
+
+<p id="ref-8">[8] Kumasaka et al. (2023). Mapping interindividual dynamics of innate immune response at single-cell resolution. Nature Genetics 55, 1066–1075. Evidence: Table 1: Fig. 1b (GPLVM states followed by GP genetic-association regression); Methods on genetic association mapping (state-dependent effect function). <a href="https://doi.org/10.1038/s41588-023-01421-y">Source</a></p>
+
+### Additional sources cited in the Figure 7 script
+
+- [scDALI](https://pmc.ncbi.nlm.nih.gov/articles/PMC8734213/)
+- [PICALO](https://pmc.ncbi.nlm.nih.gov/articles/PMC10802033/)
+- [CellCap (preprint)](https://pmc.ncbi.nlm.nih.gov/articles/PMC10979976/)
+- [contrastiveVI](https://pubmed.ncbi.nlm.nih.gov/37550579/)
