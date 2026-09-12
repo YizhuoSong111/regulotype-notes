@@ -4,12 +4,6 @@ date: 2026-09-12
 summary: Related methods, competing concepts, and the proposed intersection of inherited genetic response and cellular representation.
 ---
 
-## Motivation / overview
-
-Regulotypes propose learning and validating a shared cross-locus cis-response profile as a cellular representation. This note places that proposal alongside existing genetic-context models and response-oriented cellular representations.
-
-A cross-locus cell profile is implicit in SURGE’s fitted coefficients. Restating it as R does not create a new mathematical object; its use as a validated cellular representation needs separate evidence. [1](#ref-1)
-
 ## Related existing methods
 
 ### Table 1. Related existing methods
